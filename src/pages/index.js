@@ -4,10 +4,13 @@ import axios from "axios";
 import SearchInput from "../components/SearchInput/SearchInput";
 import CountriesTable from "../components/CountriesTable/CountriesTable";
 import {useState} from "react";
+import cors from "cors"
 
 export default function Home({countries}) {
 
     const [keyword, setKeyword] = useState("");
+
+    app.use(cors)
 
     const filterCountries = countries.filter(country =>
         country.name.toLowerCase().startsWith(keyword) ||
@@ -33,7 +36,8 @@ export default function Home({countries}) {
 }
 
 export const getStaticProps = async () => {
-    const res = await axios.get("https://restcountries.eu/rest/v2/all");
+
+    const res = await axios.get("https://word-ranks-backend.herokuapp.com/api/country/all");
     const countries = await res.data;
 
     return {

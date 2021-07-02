@@ -3,16 +3,22 @@ import Layout from "../../components/Layout/Layout";
 import styles from "./Country.module.css";
 import {useEffect, useState} from "react";
 
-const getCountry = async (id) => {
-    const res = await axios.get("https://restcountries.eu/rest/v2/alpha/" + id)
-    return await res.data;
+
+const getCountry2 = async (id) => {
+    const res = await axios.get("https://word-ranks-backend.herokuapp.com/api/country/" + id)
+    return res.data.data;
 }
 
 const Country = ({country}) => {
     const [borders, setBorders] = useState([]);
 
     const getBorders = async () => {
-        const borders = await Promise.all(country.borders.map((border) => getCountry(border)));
+        const borders = [];
+
+        for (const b of country.borders) {
+            borders.push(await getCountry2(b));
+        }
+
         setBorders(borders)
     }
 
@@ -25,7 +31,8 @@ const Country = ({country}) => {
         <div className={styles.container}>
             <div className={styles.container_left}>
                 <div className={styles.overview_panel}>
-                    <img src={country.flag} alt={country.name}/>
+                    <img src={"https://word-ranks-backend.herokuapp.com/api/data/img/" + country.alpha3Code}
+                         alt={country.name}/>
                     <h1 className={styles.overview_name}>{country.name}</h1>
                     <div className={styles.overview_region}>{country.region}</div>
 
@@ -57,13 +64,13 @@ const Country = ({country}) => {
                     <div className={styles.details_panel_row}>
                         <div className={styles.details_panel_label}>Languages</div>
                         <div
-                            className={styles.details_panel_value}>{country.languages.map(({name}) => name).join(", ")}</div>
+                            className={styles.details_panel_value}>{country.languages.map(it => it.name).join(", ")}</div>
                     </div>
 
                     <div className={styles.details_panel_row}>
                         <div className={styles.details_panel_label}>Currencies</div>
                         <div
-                            className={styles.details_panel_value}>{country.currencies.map(({name}) => name).join(", ")}</div>
+                            className={styles.details_panel_value}>{country.currencies.map(it => it.name).join(", ")}</div>
                     </div>
 
                     <div className={styles.details_panel_row}>
@@ -78,9 +85,10 @@ const Country = ({country}) => {
                     <div className={styles.details_panel_borders}>
                         <div className={styles.details_panel_borders_label}>Neighbouring Countries</div>
                         <div className={styles.details_panel_borders_container}>
-                            {borders.map(({flag, name}) =>
+                            {borders.map(({alpha3Code, name}) =>
                                 (<div className={styles.details_panel_borders_country} key={name}>
-                                    <img src={flag} alt={name}/>
+                                    <img src={"https://word-ranks-backend.herokuapp.com/api/data/img/" + alpha3Code}
+                                         alt={name}/>
                                     <div className={styles.details_panel_borders_name}>{name}</div>
                                 </div>)
                             )}
@@ -94,12 +102,14 @@ const Country = ({country}) => {
     </Layout>
 }
 export const getStaticPaths = async () => {
-    const res = await axios.get("https://restcountries.eu/rest/v2/all");
+    const res = await axios.get("https://word-ranks-backend.herokuapp.com/api/country/all");
     const countries = await res.data;
+
 
     const paths = countries.map((country) => ({
         params: {id: country.alpha3Code},
     }))
+
 
     return {
         paths,
@@ -108,7 +118,10 @@ export const getStaticPaths = async () => {
 }
 
 export const getStaticProps = async ({params}) => {
-    const country = await getCountry(params.id);
+    const country = await getCountry2(params.id);
+
+    console.log(await getCountry2("AFG"));
+
 
     return {
         props: {country}

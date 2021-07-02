@@ -79,7 +79,8 @@ const CountriesTable = ({countries}) => {
             return (<Link href={'/country/' + country.alpha3Code} key={country.name}>
                 <div className={styles.row}>
                     <div className={styles.flag}>
-                        <img src={country.flag} alt={country.name}/>
+                        <img src={"https://word-ranks-backend.herokuapp.com/api/data/img/" + country.alpha3Code}
+                             alt={country.name}/>
                     </div>
                     <div className={styles.name}>{country.name}</div>
                     <div className={styles.population}>{country.population}</div>

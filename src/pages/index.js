@@ -4,13 +4,11 @@ import axios from "axios";
 import SearchInput from "../components/SearchInput/SearchInput";
 import CountriesTable from "../components/CountriesTable/CountriesTable";
 import {useState} from "react";
-import cors from "cors"
 
 export default function Home({countries}) {
 
     const [keyword, setKeyword] = useState("");
 
-    app.use(cors)
 
     const filterCountries = countries.filter(country =>
         country.name.toLowerCase().startsWith(keyword) ||

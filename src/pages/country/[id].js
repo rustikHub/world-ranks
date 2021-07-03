@@ -120,7 +120,7 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({params}) => {
     const country = await getCountry2(params.id);
 
-    console.log(await getCountry2("AFG"));
+    // console.log(await getCountry2("AFG"));
 
 
     return {

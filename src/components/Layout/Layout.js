@@ -74,7 +74,7 @@ const Layout = ({children, title = "World Ranks"}) => {
         </main>
 
         <footer className={styles.footer}>
-            Rustik @ rustik
+            Rustam Rakhimjonov
         </footer>
     </div>)
 }
